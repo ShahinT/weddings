@@ -2,7 +2,7 @@ export interface Guest {
   id: string;
   firstName: string;
   lastName: string;
-  accepted: boolean;
+  status: string;
   comment?: string;
 }
 

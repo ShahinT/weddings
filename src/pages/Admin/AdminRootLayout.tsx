@@ -50,7 +50,7 @@ const AdminRootLayout = () => {
   return (
     <>
       <TopNavigationMenu showBackButton={false} title={'Add companion'}>
-        <button onClick={addEventHandler} className={'btn-primary-small'}>Klar</button>
+        <button onClick={() => addEventHandler()} className={'btn-primary-small'}>Klar</button>
       </TopNavigationMenu>
       <div className={'p-2'}>
         {nameValues.map((value, index) => (

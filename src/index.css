@@ -5,8 +5,26 @@ body{
     background: #fafaff;
 }
 .btn-primary{
-    @apply bg-blue-600 hover:bg-blue-700 text-white py-2 px-5 rounded;
+    @apply bg-blue-600 hover:bg-blue-700 text-white pt-1 pb-2 px-7 rounded;
 }
+.btn-danger{
+    @apply bg-red-600 hover:bg-red-700 bg-opacity-80 text-white pt-1 pb-2 px-7 rounded;
+}
+
+.btn-success{
+    @apply bg-green-600 hover:bg-green-700 text-white pt-1 pb-2 px-7 rounded;
+}
+
+.btn-cancel{
+    @apply  hover:bg-gray-700 border border-gray-700 text-gray-900 pt-1 pb-2 px-7 rounded;
+}
+.btn-link{
+    @apply text-blue-600 pt-1 pb-2 px-5 rounded;
+}
+.btn-link-danger{
+    @apply text-red-600 pt-1 pb-2 px-5 rounded;
+}
+
 .btn-primary-small{
     @apply bg-blue-600 hover:bg-blue-700 text-white py-1 px-5 rounded;
 }
@@ -17,6 +35,10 @@ body{
 
 .btn-icon-primary{
     @apply p-2 text-gray-900 bg-white rounded-lg hover:bg-gray-100;
+}
+
+.btn-primary-full{
+    @apply w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-5 rounded;
 }
 
 .input-primaty{

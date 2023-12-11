@@ -15,56 +15,99 @@ const GuestDetail = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (currentGuest){
-      console.log(currentGuest)
-      setTextAreaValue(currentGuest.comment ? currentGuest.comment: '');
+    if (currentGuest) {
+      setTextAreaValue(currentGuest.comment ? currentGuest.comment : '');
     }
-  },[currentGuest])
+  }, [currentGuest])
 
-  const textAreaValueHandler = (value: string) : void => {
+  const textAreaValueHandler = (value: string): void => {
     setTextAreaValue(value);
   }
-  const saveChangesHandler = async () => {
-    if (currentGuest){
-      await dispatch(updateGuest({guestId: currentGuest.id, comment: textAreaValue}));
+  const saveChangesHandler = async () : Promise<void> => {
+    if (currentGuest) {
+      await dispatch(updateGuest({guestId: currentGuest.id, comment: textAreaValue, status: (responseValue === 'radio-accepted') ? 'accepted' : 'declined'}));
       navigate(-1);
     }
-
   }
+
+  const [responseValue, setResponseValue] = useState("");
+
   return (
     <>
-      <TopNavigationMenu showBackButton={true} title={'Guest details'}/>
-      <div className={'p-4'}>
-        {currentGuest &&
-          <div className={'shah-card'}>
-            <div className={'flex justify-between items-center'}>
+      {currentGuest &&
+        <>
+          <TopNavigationMenu showBackButton={true} title={'Guest details'}>
+            {responseValue &&
+              <button className={'btn-primary-small'} onClick={() => saveChangesHandler()}>
+                Spara
+              </button>
+            }
+          </TopNavigationMenu>
+          <div className={'p-4'}>
+            <div className={'shah-card'}>
+              <div className={''}>
 
-              <div className={'text-xl'}>
-                {currentGuest.firstName} {currentGuest.lastName}
+                <ul className="flex justify-center items-center gap-x-2">
+                  <li>
+                    <input
+                      type="radio"
+                      id="radio-accepted"
+                      value="radio-accepted"
+                      className="hidden peer"
+                      checked={responseValue === "radio-accepted"}
+                      onChange={() => setResponseValue('radio-accepted')}
+                      required
+                    />
+                    <label htmlFor="radio-accepted"
+                           className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                      <div className="font-semibold">Jag deltar</div>
+                    </label>
+                  </li>
+                  <li>
+                    <input
+                      type="radio"
+                      id="radio-declined"
+                      value="radio-declined"
+                      className="hidden peer"
+                      checked={responseValue === "radio-declined"}
+                      onChange={() => setResponseValue('radio-declined')}
+                    />
+                    <label htmlFor="radio-declined"
+                           className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-red-500 peer-checked:border-red-600 peer-checked:text-red-400 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                      <div className="font-semibold">Jag deltar ej</div>
+                    </label>
+                  </li>
+                </ul>
               </div>
-              <div>
-                <button className={'btn-primary-small'} onClick={saveChangesHandler}>
-                  {currentGuest.accepted ? <span>Spara</span> : <span>Tacka Ja</span>}
-                </button>
-              </div>
-            </div>
-            <hr className="my-4 border-t border-gray-300 dark:border-gray-700 mx-[-1rem]" />
-            <div>
 
-              <label htmlFor="message" className="mt-6 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
-                message
-              </label>
-              <textarea
-                onChange={(e) => textAreaValueHandler(e.target.value)}
-                value={textAreaValue}
-                id="message" rows={4}
-                className="shah-text-area"
-                placeholder="Write your thoughts here...">
-               </textarea>
 
+              {responseValue === 'radio-accepted' &&
+                <>
+                  <hr className="my-4 border-t border-gray-300 dark:border-gray-700 mx-[-1rem]"/>
+                  <div>
+                    <div className={'text-xl'}>
+                      {currentGuest.firstName} {currentGuest.lastName}
+                    </div>
+
+                    <label htmlFor="message"
+                           className="mt-6 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                      Your message
+                    </label>
+                    <textarea
+                      onChange={(e) => textAreaValueHandler(e.target.value)}
+                      value={textAreaValue}
+                      id="message" rows={4}
+                      className="shah-text-area"
+                      placeholder="Write your thoughts here...">
+                    </textarea>
+                  </div>
+                </>
+              }
             </div>
-          </div>}
-      </div>
+          </div>
+        </>
+
+      }
 
     </>
   )
