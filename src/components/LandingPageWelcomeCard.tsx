@@ -3,7 +3,7 @@ import {FC, useState} from "react";
 import {Companion} from "../interfaces";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../store";
-import {declineInvatation} from "../store/event.ts";
+import {declineCurrentGuests, submitinvitation} from "../store/event.ts";
 
 interface WelcomeCardProps {
   companion: Companion,
@@ -29,7 +29,8 @@ const LandingPageWelcomeCard: FC<WelcomeCardProps> = ({companion}) => {
   })
 
   const declineHandler = async () : Promise<void> => {
-    await dispatch(declineInvatation());
+    await dispatch(submitinvitation());
+    await dispatch(declineCurrentGuests())
     setShowModal(false);
   }
 
@@ -38,18 +39,12 @@ const LandingPageWelcomeCard: FC<WelcomeCardProps> = ({companion}) => {
       <div className={'text-center shah-card'}>
         <div className={'text-xl'}>Hej {namesContainer}</div>
         <div className={'mt-2'}>
-          { companion.status === 'pending' ?
-            // <div>Deltar {pronounce} i vårt bröllop?</div> :
-            // <div>Deltar {pronounce} { ? 'båda' : 'alla'} eller någon av er i vårt bröllop?</div> :
-            <div>{questionSentence}</div> :
-            companion.status === 'accepted' ?
-            <div><span className="capitalize">{pronounce}</span> har tackat ja.</div> :
-            companion.status === 'declined' ?
-            <div><span className="capitalize">{pronounce}</span> har tackat nej. Men vi hoppas vi kan ses snart igen</div> :
-            <div>Det har upståt något fel, vänligen kontakta shahin.tamjidi@gmail.com eller arrangören.</div>
+          { companion.submitted ?
+            <div>Tack för {guetsCount > 1 ? 'ert' : 'ditt'} svar ❤️ </div> :
+            <div>{questionSentence}</div>
           }
         </div>
-        {companion.status === 'pending' &&
+        {!companion.submitted &&
           <div className={'mt-6 mb-1'}>
             <button className={'btn-danger mr-7'} onClick={() => setShowModal(true)}>Nej</button>
             {/*{guetsCount > 1 && <span>, ingen av oss</span>}*/}

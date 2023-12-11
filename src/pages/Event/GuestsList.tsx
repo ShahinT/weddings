@@ -4,7 +4,7 @@ import {IconInfo, IconSpinner} from "../../components/Icons.tsx";
 import TopNavigationMenu from "../../components/TopNavigationMenu.tsx";
 import {AppDispatch, RootState} from "../../store";
 import {Companion, Guest, Event} from "../../interfaces";
-import {changeCompanionStatus} from "../../store/event.ts";
+import {submitinvitation} from "../../store/event.ts";
 
 const GuestsList = () => {
   const navigate = useNavigate();
@@ -16,10 +16,9 @@ const GuestsList = () => {
     navigate(`../guest-detail/${guestId}`);
   }
 
-  const submitHandler = (): void => {
-    dispatch(changeCompanionStatus({status: 'accepted'})).then(() => {
-      navigate(`/event/${currentEvent?.id}/${currentCompanion?.id}`);
-    })
+  const submitHandler = async (): Promise<void> => {
+    await dispatch(submitinvitation());
+    navigate(`/event/${currentEvent?.id}/${currentCompanion?.id}`);
   }
 
   return (

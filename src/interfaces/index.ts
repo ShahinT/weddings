@@ -23,6 +23,6 @@ export interface Event {
 
 export interface Companion {
   id: string;
-  status: string;
+  submitted: boolean;
   url: string
 }

@@ -17,6 +17,7 @@ const GuestDetail = () => {
   useEffect(() => {
     if (currentGuest) {
       setTextAreaValue(currentGuest.comment ? currentGuest.comment : '');
+      setResponseValue(currentGuest.status);
     }
   }, [currentGuest])
 
@@ -25,12 +26,12 @@ const GuestDetail = () => {
   }
   const saveChangesHandler = async () : Promise<void> => {
     if (currentGuest) {
-      await dispatch(updateGuest({guestId: currentGuest.id, comment: textAreaValue, status: (responseValue === 'radio-accepted') ? 'accepted' : 'declined'}));
+      await dispatch(updateGuest({guestId: currentGuest.id, comment: textAreaValue, status: (responseValue === 'accepted') ? 'accepted' : 'declined'}));
       navigate(-1);
     }
   }
 
-  const [responseValue, setResponseValue] = useState("");
+  const [responseValue, setResponseValue] = useState<string>('');
 
   return (
     <>
@@ -51,14 +52,14 @@ const GuestDetail = () => {
                   <li>
                     <input
                       type="radio"
-                      id="radio-accepted"
-                      value="radio-accepted"
+                      id="accepted"
+                      value="accepted"
                       className="hidden peer"
-                      checked={responseValue === "radio-accepted"}
-                      onChange={() => setResponseValue('radio-accepted')}
+                      checked={responseValue === "accepted"}
+                      onChange={() => setResponseValue('accepted')}
                       required
                     />
-                    <label htmlFor="radio-accepted"
+                    <label htmlFor="accepted"
                            className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                       <div className="font-semibold">Jag deltar</div>
                     </label>
@@ -66,13 +67,13 @@ const GuestDetail = () => {
                   <li>
                     <input
                       type="radio"
-                      id="radio-declined"
-                      value="radio-declined"
+                      id="declined"
+                      value="declined"
                       className="hidden peer"
-                      checked={responseValue === "radio-declined"}
-                      onChange={() => setResponseValue('radio-declined')}
+                      checked={responseValue === "declined"}
+                      onChange={() => setResponseValue('declined')}
                     />
-                    <label htmlFor="radio-declined"
+                    <label htmlFor="declined"
                            className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-red-500 peer-checked:border-red-600 peer-checked:text-red-400 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                       <div className="font-semibold">Jag deltar ej</div>
                     </label>
@@ -81,7 +82,7 @@ const GuestDetail = () => {
               </div>
 
 
-              {responseValue === 'radio-accepted' &&
+              {responseValue === 'accepted' &&
                 <>
                   <hr className="my-4 border-t border-gray-300 dark:border-gray-700 mx-[-1rem]"/>
                   <div>

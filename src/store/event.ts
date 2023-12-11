@@ -1,5 +1,14 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {doc, getDoc, setDoc, getDocs, collection, updateDoc, DocumentReference, DocumentSnapshot  } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  getDocs,
+  collection,
+  updateDoc,
+  DocumentReference,
+  DocumentSnapshot
+} from "firebase/firestore";
 import {db} from "../plugins/firebase.ts";
 import {Companion, Guest, User, Event} from "../interfaces";
 import {RootState} from "./index.ts";
@@ -25,26 +34,28 @@ export interface StatusPayload {
   status: string
 }
 
-export const declineInvatation = createAsyncThunk("event/declineInvatation", async (_, {getState}) => {
+export const declineCurrentGuests = createAsyncThunk("event/declineCurrentGuests", async (_, {getState}) => {
+  // This one is called when user declines entire invitation from LANDING PAGE for all companion guests.
   const rootState: RootState = getState() as RootState;
-  if (rootState.event.currentEvent && rootState.event.currentCompanion){
-    const companionRef = doc(db, "events", rootState.event.currentEvent.id, "companions", rootState.event.currentCompanion.id)
-    await updateDoc(companionRef, {
-      status: "declined"
-    })
+  if (rootState.event.currentEvent && rootState.event.currentCompanion && rootState.event.currentGuests) {
+    for (const guest of rootState.event.currentGuests) {
+      const guestRef = doc(db, "events", rootState.event.currentEvent.id, "companions", rootState.event.currentCompanion.id, "guests", guest.id);
+      await updateDoc(guestRef, {
+        status: 'declined'
+      })
+    }
   }
 })
 
-  export const changeCompanionStatus = createAsyncThunk("event/changeCompanionStatus", async (payload: StatusPayload, {getState}) => {
+export const submitinvitation = createAsyncThunk("event/submitinvitation", async (_, {getState}) => {
+  // This one is called when guests asnwer their tickets from GUEST DETAIL one by one and submit their response.
   const rootState: RootState = getState() as RootState;
   const eventState = rootState.event;
-  if(eventState.currentEvent && eventState.currentCompanion){
-    console.log(eventState.currentEvent.id, eventState.currentCompanion.id)
+  if (eventState.currentEvent && eventState.currentCompanion) {
     const companionRef = doc(db, "events", eventState.currentEvent.id, "companions", eventState.currentCompanion.id);
     await updateDoc(companionRef, {
-      status: payload.status
+      submitted: true
     })
-    return {status: payload.status}
   }
 })
 
@@ -58,7 +69,7 @@ export const setCurrentEvent = createAsyncThunk("event/setCurrentEvent", async (
   const currentCompanionSnap = await getDoc(currentCompanionRef);
   const currentCompanion: Companion = {
     id: currentCompanionSnap.data()?.id,
-    status: currentCompanionSnap.data()?.status,
+    submitted: currentCompanionSnap.data()?.submitted,
     url: currentCompanionSnap.data()?.url
   }
 
@@ -71,7 +82,7 @@ export const setCurrentEvent = createAsyncThunk("event/setCurrentEvent", async (
       firstName: doc.data().firstName,
       lastName: doc.data().lastName,
       status: doc.data().status,
-      ...(doc.data().comment && { comment: doc.data().comment})
+      ...(doc.data().comment && {comment: doc.data().comment})
     }
     currentGuests.push(guest);
   });
@@ -124,16 +135,14 @@ export const addGuest = createAsyncThunk('event/addGuest', async (guests: Array<
 
     await setDoc(doc(db, "events", currentUser.uid, "companions", (currentCompanionId + counters?.companionCounter)), {
       id: (currentCompanionId + counters?.companionCounter),
-      status: "pending",
+      submitted: false,
       url: url + counters?.companionCounter
     })
     for (const [index, guest] of guests.entries()) {
       currentGuestId = guest.firstName + guest.lastName;
-      console.log('currentGuestId + (counters?.guestCounter+index)')
-      console.log(currentGuestId + (counters?.guestCounter+index))
-      const guestsRef: DocumentReference = doc(db, "events", currentUser.uid, "companions", (currentCompanionId + counters?.companionCounter), "guests", currentGuestId+(counters?.guestCounter+index));
+      const guestsRef: DocumentReference = doc(db, "events", currentUser.uid, "companions", (currentCompanionId + counters?.companionCounter), "guests", currentGuestId + (counters?.guestCounter + index));
       await setDoc(guestsRef, {
-        id: currentGuestId + (counters?.guestCounter+index),
+        id: currentGuestId + (counters?.guestCounter + index),
         firstName: guest.firstName,
         lastName: guest.lastName,
         status: 'pending'
@@ -165,28 +174,27 @@ const eventSlice = createSlice({
         return {
           ...state,
           currentGuests: state.currentGuests.map((guest: Guest) =>
-            guest.id === action.payload?.guestId ? {...guest, comment: action.payload.comment, status: action.payload.status} : guest
+            guest.id === action.payload?.guestId ? {
+              ...guest,
+              comment: action.payload.comment,
+              status: action.payload.status
+            } : guest
           )
         };
       })
-      .addCase(declineInvatation.fulfilled, (state: EventState) => {
+      .addCase(declineCurrentGuests.fulfilled, (state: EventState) => {
         return {
           ...state,
-          currentCompanion: {
-            ...state.currentCompanion!,
-            status: 'declined'
-          },
-          currentGuests: state.currentGuests.map((guest: Guest) => ({...guest, accepted: true}))
-
+          currentGuests: state.currentGuests.map((guest: Guest) => ({...guest, status: 'declined'}))
         }
       })
-      .addCase(changeCompanionStatus.fulfilled, (state: EventState, action) => {
+      .addCase(submitinvitation.fulfilled, (state: EventState) => {
         return {
           ...state,
           currentCompanion: {
             ...state.currentCompanion!,
-            status: action.payload!.status
-          },
+            submitted: true
+          }
         }
       })
 
