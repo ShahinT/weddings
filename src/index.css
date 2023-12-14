@@ -1,61 +1,77 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body{
-    background: #fafaff;
-}
-.btn-primary{
-    @apply bg-blue-600 hover:bg-blue-700 text-white pt-1 pb-2 px-7 rounded;
-}
-.btn-danger{
-    @apply bg-red-600 hover:bg-red-700 bg-opacity-80 text-white pt-1 pb-2 px-7 rounded;
+body {
+  /*background: #fafaff;*/
 }
 
-.btn-success{
-    @apply bg-green-600 hover:bg-green-700 text-white pt-1 pb-2 px-7 rounded;
+.active-nav svg{
+  fill: #8b33d7;
 }
 
-.btn-cancel{
-    @apply  hover:bg-gray-700 border border-gray-700 text-gray-900 pt-1 pb-2 px-7 rounded;
-}
-.btn-link{
-    @apply text-blue-600 pt-1 pb-2 px-5 rounded;
-}
-.btn-link-danger{
-    @apply text-red-600 pt-1 pb-2 px-5 rounded;
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white pt-1 pb-2 px-7 rounded;
 }
 
-.btn-primary-small{
-    @apply bg-blue-600 hover:bg-blue-700 text-white py-1 px-5 rounded;
+.btn-danger {
+  @apply bg-red-600 hover:bg-red-700 bg-opacity-80 text-white pt-1 pb-2 px-7 rounded;
 }
 
-.btn-icon{
-    @apply text-white hover:bg-gray-700 font-medium rounded-full text-sm text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
+.btn-success {
+  @apply bg-green-600 hover:bg-green-700 text-white pt-1 pb-2 px-7 rounded;
 }
 
-.btn-icon-primary{
-    @apply p-2 text-gray-900 bg-white rounded-lg hover:bg-gray-100;
+.btn-cancel {
+  @apply hover:bg-gray-700 border border-gray-700 text-gray-900 pt-1 pb-2 px-7 rounded;
 }
 
-.btn-primary-full{
-    @apply w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-5 rounded;
+.btn-bottom-nav {
+  @apply mx-3 inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800;
 }
 
-.input-primaty{
-    @apply w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+.btn-link {
+  @apply text-purple-600 pt-1 pb-2 px-5 rounded;
 }
 
-.shah-card-hover{
-    @apply block p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700;
+.btn-link-danger {
+  @apply text-red-600 pt-1 pb-2 px-5 rounded;
 }
 
-.shah-card{
-    @apply block p-4 md:p-5 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700;
+.btn-primary-small {
+  @apply bg-purple-600 hover:bg-purple-700 text-white py-1 px-2 rounded;
 }
-.shah-card-small{
-    @apply block p-1 md:p-5 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700;
+.btn-primary-icon-right {
+  @apply bg-purple-600 hover:bg-purple-700 text-white py-1 pl-2 rounded;
 }
 
-.shah-text-area{
-    @apply block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+.btn-icon {
+  @apply text-white hover:bg-gray-700 font-medium rounded-full text-sm text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
+}
+
+.btn-icon-primary {
+  @apply p-2 text-gray-900 bg-white rounded-lg hover:bg-gray-100;
+}
+
+.btn-primary-full {
+  @apply w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-5 rounded;
+}
+
+.input-primaty {
+  @apply w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+}
+
+.shah-card-hover {
+  @apply block p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700;
+}
+
+.shah-card {
+  @apply block p-4 md:p-5 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700;
+}
+
+.shah-card-small {
+  @apply block p-1 md:p-5 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700;
+}
+
+.shah-text-area {
+  @apply block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
 }

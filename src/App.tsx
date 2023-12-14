@@ -9,6 +9,10 @@ import EventGuestsList from "./pages/Event/GuestsList.tsx";
 import EventGuestDetail from "./pages/Event/GuestDetail.tsx";
 import RouteGuard from "./components/RouteGuard.tsx";
 import AdminRootLayout from "./pages/Admin/AdminRootLayout.tsx";
+import GuestsListAdmin from "./pages/Admin/GuestsListAdmin.tsx";
+import AddGuest from "./pages/Admin/AddGuest.tsx";
+import GuestPlacement from "./pages/Admin/GuestsPlacement.tsx";
+import AdminLandingPage from "./pages/Admin/AdminLandingPage.tsx";
 
 declare global {
   interface Window {
@@ -46,8 +50,14 @@ function App() {
       element: <RouteGuard isProtected={false} element={<Login />} />
     },
     {
-      path: '/admin',
-      element: <RouteGuard isProtected={true} element={<AdminRootLayout />} />
+      path: '/:eventId/admin',
+      element: <RouteGuard isProtected={true} element={<AdminRootLayout />} />,
+      children: [
+        { index: true, element: <AdminLandingPage />},
+        { path: 'add-guest', element: <AddGuest />},
+        { path: 'guests-list', element: <GuestsListAdmin />},
+        { path: 'guests-placement', element: <GuestPlacement />},
+      ]
     }
   ])
   return (

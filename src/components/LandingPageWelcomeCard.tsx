@@ -20,7 +20,7 @@ const LandingPageWelcomeCard: FC<WelcomeCardProps> = ({companion}) => {
         guetsCount > 2 ? 'Deltar ni alla eller några av er i vårt bröllop?' : ''
   })
   const namesContainer: string = useSelector((state: RootState) => {
-    const guetsFirstNames: Array<string> = state.event.currentGuests.map(guest => guest.firstName.split(' ')[0]);
+    const guetsFirstNames: string[] = state.event.currentGuests.map(guest => guest.firstName.split(' ')[0]);
     let stringOfNames: string = '';
     guetsFirstNames.forEach((name: string, index: number): void => {
       stringOfNames = stringOfNames + (index === 0 ? '' : (index > 1 || guetsFirstNames.length === 2 ? ' och ' : ', ')) + name;

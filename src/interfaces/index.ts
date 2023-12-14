@@ -5,6 +5,11 @@ export interface Guest {
   status: string;
   comment?: string;
 }
+export interface GuestCreationMaterial {
+  firstName: string,
+  lastName: string,
+  showDropDown: boolean,
+}
 
 export interface GuestPayload {
   firstName: string;

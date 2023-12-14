@@ -2,21 +2,20 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {
   doc,
   getDoc,
-  setDoc,
   getDocs,
   collection,
   updateDoc,
-  DocumentReference,
-  DocumentSnapshot
+  addDoc,
+  DocumentReference
 } from "firebase/firestore";
 import {db} from "../plugins/firebase.ts";
-import {Companion, Guest, User, Event} from "../interfaces";
+import {Companion, Guest, Event, GuestCreationMaterial} from "../interfaces";
 import {RootState} from "./index.ts";
 
 export interface EventState {
   currentEvent: Event | null;
   currentCompanion: Companion | null;
-  currentGuests: Array<Guest> | [];
+  currentGuests: Guest[] | [];
 }
 
 const initialState: EventState = {
@@ -75,7 +74,7 @@ export const setCurrentEvent = createAsyncThunk("event/setCurrentEvent", async (
 
   const currentGuestsRef = collection(db, "events", payload.eventId, "companions", payload.companionId, "guests");
   const currentGuestsSnap = await getDocs(currentGuestsRef);
-  const currentGuests: Array<Guest> = [];
+  const currentGuests: Guest[] = [];
   currentGuestsSnap.forEach((doc) => {
     const guest: Guest = {
       id: doc.data().id,
@@ -114,46 +113,29 @@ export const updateGuest = createAsyncThunk('event/updateGuest', async (payload:
   }
 
 })
+export interface Kir {nameValues: GuestCreationMaterial[], eventId: string|undefined}
 
-export interface GuestAndUserPayload {
-  firstName: string,
-  lastName: string,
-  showDropDown: boolean;
-}
-
-export const addGuest = createAsyncThunk('event/addGuest', async (guests: Array<GuestAndUserPayload>, thunkAPI) => {
-  const currentState: RootState = thunkAPI.getState() as RootState;
-  const currentUser: User | null = currentState.authentication.currentUser;
-  if (currentUser) {
-    const currentCompanionId: string = guests.map(guest => guest.firstName).join('');
-    const url: string = `http://localhost:5173/event/${currentUser.uid}/${currentCompanionId}`;
-    let currentGuestId: string = '';
-
-    const counterRef: DocumentReference = doc(db, "counters", "counters");
-    const countersSnap: DocumentSnapshot = await getDoc(counterRef);
-    const counters = countersSnap.data();
-
-    await setDoc(doc(db, "events", currentUser.uid, "companions", (currentCompanionId + counters?.companionCounter)), {
-      id: (currentCompanionId + counters?.companionCounter),
+export const addGuest = createAsyncThunk('event/addGuest', async (kir: Kir): Promise<void> => {
+    const companionRef: DocumentReference = await addDoc(collection(db, "companions"), {
       submitted: false,
-      url: url + counters?.companionCounter
+      eventId: kir.eventId
     })
-    for (const [index, guest] of guests.entries()) {
-      currentGuestId = guest.firstName + guest.lastName;
-      const guestsRef: DocumentReference = doc(db, "events", currentUser.uid, "companions", (currentCompanionId + counters?.companionCounter), "guests", currentGuestId + (counters?.guestCounter + index));
-      await setDoc(guestsRef, {
-        id: currentGuestId + (counters?.guestCounter + index),
+    await updateDoc(companionRef, {
+      url: `http://localhost:5173/event/${kir.eventId}/${companionRef.id}`,
+      id: companionRef.id
+    })
+    for (const guest of kir.nameValues) {
+      const guestRef: DocumentReference = await addDoc(collection(db, "guests"), {
         firstName: guest.firstName,
         lastName: guest.lastName,
-        status: 'pending'
+        status: 'pending',
+        eventId: kir.eventId,
+        companionId: companionRef.id
       });
+      await updateDoc(guestRef, {
+        id: guestRef.id
+      })
     }
-    await updateDoc(counterRef, {
-      companionCounter: counters?.companionCounter + 1,
-      guestCounter: counters?.guestCounter + guests.length
-    })
-  }
-  return {message: 'Successfully added guests to'};
 })
 
 const eventSlice = createSlice({

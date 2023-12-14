@@ -8,7 +8,7 @@ import {submitinvitation} from "../../store/event.ts";
 
 const GuestsList = () => {
   const navigate = useNavigate();
-  const currentGuests: Array<Guest> = useSelector((state: RootState) => state.event.currentGuests);
+  const currentGuests: Guest[] = useSelector((state: RootState) => state.event.currentGuests);
   const dispatch = useDispatch<AppDispatch>()
   const currentEvent: Event | null = useSelector((state: RootState) => state.event.currentEvent)
   const currentCompanion: Companion | null = useSelector((state: RootState) => state.event.currentCompanion)
