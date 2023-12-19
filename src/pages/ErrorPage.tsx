@@ -21,7 +21,7 @@ function ErrorPage() {
               Contact support <span aria-hidden="true">&rarr;</span>
             </a>
             <div>
-              {error && error.data && error.message &&error.data.message}
+              {error && error.data && error.message && error.data.message}
             </div>
           </div>
         </div>

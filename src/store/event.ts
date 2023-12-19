@@ -6,7 +6,7 @@ import {
   collection,
   updateDoc,
   addDoc,
-  DocumentReference
+  DocumentReference, query, where
 } from "firebase/firestore";
 import {db} from "../plugins/firebase.ts";
 import {Companion, Guest, Event, GuestCreationMaterial} from "../interfaces";
@@ -16,12 +16,20 @@ export interface EventState {
   currentEvent: Event | null;
   currentCompanion: Companion | null;
   currentGuests: Guest[] | [];
+  adminEvents: Event[] | [],
+  currentAdminEvent: { companions: Array<{guests: Guest[]}> } | null,
+  currentAdminGuests: Guest[] | [],
+  currentAdminCompanions: Companion[] | [],
 }
 
 const initialState: EventState = {
   currentCompanion: null,
   currentEvent: null,
   currentGuests: [],
+  adminEvents: [],
+  currentAdminEvent: null,
+  currentAdminGuests: [],
+  currentAdminCompanions: []
 }
 
 export interface EventCompanionIdPayload {
@@ -32,6 +40,54 @@ export interface EventCompanionIdPayload {
 export interface StatusPayload {
   status: string
 }
+
+export const setCurrentAdminEvent = createAsyncThunk("event/setCurrentAdminEvent", async (payload: { eventId: string | undefined }) => {
+  const companionsQuery = query(collection(db, "companions"), where("eventId", "==", payload.eventId));
+  const companionsSnap = await getDocs(companionsQuery)
+  const companions: Companion[] = companionsSnap.docs.map(companion => (
+    {
+      id: companion.data().id,
+      eventId: companion.data().eventId,
+      submitted: companion.data().submitted,
+      url: companion.data().url
+    }));
+
+  const guestsQuery = query(collection(db, "guests"), where("eventId", "==", payload.eventId));
+  const guestsSnap = await getDocs(guestsQuery)
+  const guests: Guest[] = guestsSnap.docs.map(guest => (
+    {
+      id: guest.data().id,
+      eventId: guest.data().eventId,
+      companionId: guest.data().companionId,
+      firstName: guest.data().firstName,
+      lastName: guest.data().lastName,
+      status: guest.data().status,
+      comment: guest.data().comment
+    }));
+
+  const event =  {
+    companions: companions.map(companion => ({
+      ...companion,
+      guests: guests.filter(guest => guest.companionId === companion.id)
+    }))
+  };
+  // console.log(event);
+  return {event, guests, companions}
+})
+
+export const setAdminEvents = createAsyncThunk("event/setAdminEvents", async (_, {getState}) => {
+  const rootState = getState() as RootState;
+  const currentUser = rootState.authentication.currentUser;
+  const eventsQuery = query(collection(db, "events"), where("userId", "==", currentUser?.uid));
+  const eventsSnapshot = await getDocs(eventsQuery);
+  return eventsSnapshot.docs.map((event) => (
+    {
+      id: event.data().id,
+      userId: event.data().userId,
+      name: event.data().name
+    }
+  ))
+})
 
 export const declineCurrentGuests = createAsyncThunk("event/declineCurrentGuests", async (_, {getState}) => {
   // This one is called when user declines entire invitation from LANDING PAGE for all companion guests.
@@ -62,12 +118,17 @@ export const setCurrentEvent = createAsyncThunk("event/setCurrentEvent", async (
 
   const currentEventRef = doc(db, "events", payload.eventId);
   const currentEventSnap = await getDoc(currentEventRef);
-  const currentEvent: Event = {id: currentEventSnap.data()?.id, email: currentEventSnap.data()?.email}
+  const currentEvent: Event = {
+    id: currentEventSnap.data()?.id,
+    name: currentEventSnap.data()?.name,
+    userId: currentEventSnap.data()?.userId
+  }
 
   const currentCompanionRef = doc(db, "events", payload.eventId, "companions", payload.companionId);
   const currentCompanionSnap = await getDoc(currentCompanionRef);
   const currentCompanion: Companion = {
     id: currentCompanionSnap.data()?.id,
+    eventId: currentCompanionSnap.data()?.eventId,
     submitted: currentCompanionSnap.data()?.submitted,
     url: currentCompanionSnap.data()?.url
   }
@@ -113,29 +174,33 @@ export const updateGuest = createAsyncThunk('event/updateGuest', async (payload:
   }
 
 })
-export interface Kir {nameValues: GuestCreationMaterial[], eventId: string|undefined}
+
+export interface Kir {
+  nameValues: GuestCreationMaterial[],
+  eventId: string | undefined
+}
 
 export const addGuest = createAsyncThunk('event/addGuest', async (kir: Kir): Promise<void> => {
-    const companionRef: DocumentReference = await addDoc(collection(db, "companions"), {
-      submitted: false,
-      eventId: kir.eventId
+  const companionRef: DocumentReference = await addDoc(collection(db, "companions"), {
+    submitted: false,
+    eventId: kir.eventId
+  })
+  await updateDoc(companionRef, {
+    url: `http://localhost:5173/event/${kir.eventId}/${companionRef.id}`,
+    id: companionRef.id
+  })
+  for (const guest of kir.nameValues) {
+    const guestRef: DocumentReference = await addDoc(collection(db, "guests"), {
+      firstName: guest.firstName,
+      lastName: guest.lastName,
+      status: 'pending',
+      eventId: kir.eventId,
+      companionId: companionRef.id
+    });
+    await updateDoc(guestRef, {
+      id: guestRef.id
     })
-    await updateDoc(companionRef, {
-      url: `http://localhost:5173/event/${kir.eventId}/${companionRef.id}`,
-      id: companionRef.id
-    })
-    for (const guest of kir.nameValues) {
-      const guestRef: DocumentReference = await addDoc(collection(db, "guests"), {
-        firstName: guest.firstName,
-        lastName: guest.lastName,
-        status: 'pending',
-        eventId: kir.eventId,
-        companionId: companionRef.id
-      });
-      await updateDoc(guestRef, {
-        id: guestRef.id
-      })
-    }
+  }
 })
 
 const eventSlice = createSlice({
@@ -177,6 +242,20 @@ const eventSlice = createSlice({
             ...state.currentCompanion!,
             submitted: true
           }
+        }
+      })
+      .addCase(setAdminEvents.fulfilled, (state: EventState, action) => {
+        return {
+          ...state,
+          adminEvents: action.payload
+        }
+      })
+      .addCase(setCurrentAdminEvent.fulfilled, (state: EventState, action) => {
+        return {
+          ...state,
+          currentAdminEvent: action.payload.event,
+          currentAdminCompanions: action.payload.companions,
+          currentAdminGuests: action.payload.guests
         }
       })
 

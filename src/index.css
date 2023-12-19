@@ -2,11 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 body {
-  /*background: #fafaff;*/
+  /*background: rgba(248, 248, 248, 0.7);*/
 }
 
 .active-nav svg{
   fill: #8b33d7;
+}
+
+.palcemenet-wrapper{
+  display: flex;
+  padding: 1rem;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 3.5rem);
 }
 
 .btn-primary {
@@ -61,11 +70,11 @@ body {
 }
 
 .shah-card-hover {
-  @apply block p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700;
+  @apply block p-4 cursor-pointer md:p-5 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700;
 }
 
 .shah-card {
-  @apply block p-4 md:p-5 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700;
+  @apply p-4 md:p-5 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700;
 }
 
 .shah-card-small {
@@ -75,3 +84,10 @@ body {
 .shah-text-area {
   @apply block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
 }
+
+.search-input{
+  @apply block w-full p-4 ps-10 text-sm text-gray-900 border-b outline-none border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white ;
+}
+/*.kir{*/
+/*  background-color: #fafafa;*/
+/*}*/

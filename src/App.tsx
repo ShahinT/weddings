@@ -50,10 +50,13 @@ function App() {
       element: <RouteGuard isProtected={false} element={<Login />} />
     },
     {
-      path: '/:eventId/admin',
+      path: '/admin',
+      element: <RouteGuard isProtected={true} element={<AdminLandingPage />} />
+    },
+    {
+      path: '/admin/:eventId',
       element: <RouteGuard isProtected={true} element={<AdminRootLayout />} />,
       children: [
-        { index: true, element: <AdminLandingPage />},
         { path: 'add-guest', element: <AddGuest />},
         { path: 'guests-list', element: <GuestsListAdmin />},
         { path: 'guests-placement', element: <GuestPlacement />},

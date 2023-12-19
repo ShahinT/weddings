@@ -1,5 +1,7 @@
 export interface Guest {
   id: string;
+  eventId: string;
+  companionId: string;
   firstName: string;
   lastName: string;
   status: string;
@@ -23,11 +25,13 @@ export interface User {
 
 export interface Event {
   id: string;
-  email: string;
+  name: string;
+  userId: string;
 }
 
 export interface Companion {
   id: string;
+  eventId: string;
   submitted: boolean;
   url: string
 }

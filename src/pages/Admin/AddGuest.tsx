@@ -57,7 +57,7 @@ const AddGuest = () => {
         </div>
         <div className={'p-2'}>
           {nameValues.map((value, index) => (
-            <div key={index} className={'shah-card mb-4'}>
+            <div key={index} className={'shah-card mb-2'}>
               <div className={'mb-2 px-1 flex justify-between items-center'}>
                 <div className="flex items-center">
 
