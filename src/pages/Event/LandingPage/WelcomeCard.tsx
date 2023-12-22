@@ -1,15 +1,16 @@
-import {NavLink} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import {FC, useState} from "react";
-import {Companion} from "../interfaces";
+import {Companion} from "../../../interfaces";
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../store";
-import {declineCurrentGuests, submitinvitation} from "../store/event.ts";
+import {AppDispatch, RootState} from "../../../store";
+import {declineCurrentGuests, submitinvitation} from "../../../store/event.ts";
 
 interface WelcomeCardProps {
   companion: Companion,
 }
 
-const LandingPageWelcomeCard: FC<WelcomeCardProps> = ({companion}) => {
+const WelcomeCard: FC<WelcomeCardProps> = ({companion}) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>()
   const guetsCount: number = useSelector((state: RootState) => state.event.currentGuests.length)
   const [pronounce] = useState<string>((): string => guetsCount > 1 ? 'ni' : 'du')
@@ -46,9 +47,8 @@ const LandingPageWelcomeCard: FC<WelcomeCardProps> = ({companion}) => {
         </div>
         {!companion.submitted &&
           <div className={'mt-6 mb-1'}>
-            <button className={'btn-danger mr-7'} onClick={() => setShowModal(true)}>Nej</button>
-            {/*{guetsCount > 1 && <span>, ingen av oss</span>}*/}
-            <NavLink className={'btn-primary'} to={'companion-guests-list'}>Ja, det gör vi</NavLink>
+            <button className={'btn-cancel mr-7'} onClick={() => setShowModal(true)}>Nej</button>
+            <button className={'btn-primary'} onClick={() => navigate("companion-guests-list")}>Ja, det gör vi</button>
           </div>
         }
       </div>
@@ -67,4 +67,4 @@ const LandingPageWelcomeCard: FC<WelcomeCardProps> = ({companion}) => {
   )
 }
 
-export default LandingPageWelcomeCard;
+export default WelcomeCard;

@@ -109,7 +109,7 @@ const GuestsListAdmin = () => {
 
         <div className="p-2">
           {filteredCompanions && filteredCompanions.map((companion: NestedCompanion) => (
-            <div className="flex  mb-2  bg-white" key={companion.id} onClick={() => selectCompanionHandler(companion)}>
+            <div className="flex  mb-2  bg-white" key={companion.id}>
               <div className="w-11/12 border rounded-l-lg border-gray-200">
                 {companion.guests.map((guest: Guest, index: number) => (
                   <div key={guest.id}>
@@ -127,7 +127,7 @@ const GuestsListAdmin = () => {
                   </div>
                 ))}
               </div>
-              <div className="w-1/12 bg-slate-400 rounded-r-lg flex items-center justify-center">
+              <div className="w-1/12 bg-slate-400 rounded-r-lg flex items-center justify-center cursor-pointer" onClick={() => selectCompanionHandler(companion)}>
                 <IconPeople size="3" color="white" />
               </div>
             </div>
@@ -152,14 +152,14 @@ const GuestsListAdmin = () => {
         {/*</div>*/}
       </div>
       {selectedCompanion && showCompanionModal &&
-        <div id="modal" className="fixed z-40 inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 w-80 rounded">
-            <div className="text-center">
-              {selectedCompanion.url}
+        <div id="modal" className="fixed z-40 inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 w-10/12 rounded">
+            <div className="flex justify-center">
+              <img src="https://miro.medium.com/v2/resize:fit:990/1*FX_LPYdLaX1IPlohROEaQA.jpeg" alt="qr-code" className="w-44" />
             </div>
             <div className="flex justify-center mt-7">
               <button className="btn-cancel mx-2" onClick={() => setShowCompanionModal(false)}>Avbryt</button>
-              <button className="btn-danger mx-2">Tacka nej</button>
+              <a href={selectedCompanion.url} className="btn-primary mx-2">Besök sidan</a>
             </div>
           </div>
         </div>

@@ -26,7 +26,7 @@ const GuestDetail = () => {
   }
   const saveChangesHandler = async () : Promise<void> => {
     if (currentGuest) {
-      await dispatch(updateGuest({guestId: currentGuest.id, comment: textAreaValue, status: (responseValue === 'accepted') ? 'accepted' : 'declined'}));
+      await dispatch(updateGuest({guestId: currentGuest.id, comment: textAreaValue, status: responseValue}));
       navigate(-1);
     }
   }
@@ -45,8 +45,8 @@ const GuestDetail = () => {
             }
           </TopNavigationMenu>
           <div className={'p-4'}>
-            <div className={'shah-card'}>
-              <div className={''}>
+            <div>
+              <div className="mb-4">
 
                 <ul className="flex justify-center items-center gap-x-2">
                   <li>
@@ -82,27 +82,25 @@ const GuestDetail = () => {
               </div>
 
 
+              {/*<hr className="my-4 border-t border-gray-300 dark:border-gray-700 mx-[-1rem]"/>*/}
               {responseValue === 'accepted' &&
-                <>
-                  <hr className="my-4 border-t border-gray-300 dark:border-gray-700 mx-[-1rem]"/>
-                  <div>
-                    <div className={'text-xl'}>
-                      {currentGuest.firstName} {currentGuest.lastName}
-                    </div>
-
-                    <label htmlFor="message"
-                           className="mt-6 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Your message
-                    </label>
-                    <textarea
-                      onChange={(e) => textAreaValueHandler(e.target.value)}
-                      value={textAreaValue}
-                      id="message" rows={4}
-                      className="shah-text-area"
-                      placeholder="Write your thoughts here...">
-                    </textarea>
+                <div className="shah-card">
+                  <div className={'text-xl'}>
+                    {currentGuest.firstName} {currentGuest.lastName}
                   </div>
-                </>
+
+                  <label htmlFor="message"
+                         className="mt-6 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Your message (optional)
+                  </label>
+                  <textarea
+                    onChange={(e) => textAreaValueHandler(e.target.value)}
+                    value={textAreaValue}
+                    id="message" rows={4}
+                    className="shah-text-area"
+                    placeholder="Write your thoughts here...">
+                  </textarea>
+                </div>
               }
             </div>
           </div>

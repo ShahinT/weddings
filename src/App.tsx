@@ -4,7 +4,7 @@ import AppRootLayout from "./pages/AppRootLayout.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import Home from "./pages/Home.tsx";
 import EventRootLayout from "./pages/Event/EventRootLayout.tsx";
-import EventLandingPage from "./pages/Event/LandingPage.tsx";
+import EventLandingPage from "./pages/Event/LandingPage";
 import EventGuestsList from "./pages/Event/GuestsList.tsx";
 import EventGuestDetail from "./pages/Event/GuestDetail.tsx";
 import RouteGuard from "./components/RouteGuard.tsx";

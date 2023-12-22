@@ -107,7 +107,7 @@ export const submitinvitation = createAsyncThunk("event/submitinvitation", async
   const rootState: RootState = getState() as RootState;
   const eventState = rootState.event;
   if (eventState.currentEvent && eventState.currentCompanion) {
-    const companionRef = doc(db, "events", eventState.currentEvent.id, "companions", eventState.currentCompanion.id);
+    const companionRef = doc(db, "companions", eventState.currentCompanion.id);
     await updateDoc(companionRef, {
       submitted: true
     })
@@ -124,33 +124,26 @@ export const setCurrentEvent = createAsyncThunk("event/setCurrentEvent", async (
     userId: currentEventSnap.data()?.userId
   }
 
-  const currentCompanionRef = doc(db, "events", payload.eventId, "companions", payload.companionId);
-  const currentCompanionSnap = await getDoc(currentCompanionRef);
+  const currentCompanionSnap = await getDoc(doc(db, "companions", payload.companionId))
   const currentCompanion: Companion = {
     id: currentCompanionSnap.data()?.id,
     eventId: currentCompanionSnap.data()?.eventId,
     submitted: currentCompanionSnap.data()?.submitted,
     url: currentCompanionSnap.data()?.url
   }
+  const guestsQuery = query(collection(db, "guests"), where("companionId","==", payload.companionId))
+  const guestsSnap = await getDocs(guestsQuery);
+  const currentGuests: Guest[] = guestsSnap.docs.map(doc => ({
+    id: doc.data().id,
+    firstName: doc.data().firstName,
+    lastName: doc.data().lastName,
+    status: doc.data().status,
+    companionId: doc.data().companionId,
+    eventId: doc.data().eventId,
+    ...(doc.data().comment && {comment: doc.data().comment})
+  }))
 
-  const currentGuestsRef = collection(db, "events", payload.eventId, "companions", payload.companionId, "guests");
-  const currentGuestsSnap = await getDocs(currentGuestsRef);
-  const currentGuests: Guest[] = [];
-  currentGuestsSnap.forEach((doc) => {
-    const guest: Guest = {
-      id: doc.data().id,
-      firstName: doc.data().firstName,
-      lastName: doc.data().lastName,
-      status: doc.data().status,
-      ...(doc.data().comment && {comment: doc.data().comment})
-    }
-    currentGuests.push(guest);
-  });
-
-  return {
-    currentEvent: currentEvent,
-    currentCompanion: currentCompanion,
-    currentGuests: currentGuests
+  return {currentEvent,currentCompanion,currentGuests
   };
 })
 
@@ -163,7 +156,7 @@ export interface GuestUpdatePayload {
 export const updateGuest = createAsyncThunk('event/updateGuest', async (payload: GuestUpdatePayload, {getState}) => {
   const currentState: RootState = getState() as RootState;
   if (currentState && currentState.event.currentEvent && currentState.event.currentCompanion) {
-    const guestRef = doc(db, "events", currentState.event.currentEvent.id, "companions", currentState.event.currentCompanion.id, "guests", payload.guestId);
+    const guestRef = doc(db, "guests", payload.guestId);
     await updateDoc(guestRef, {
       status: payload.status,
       ...(payload.comment !== '' && {comment: payload.comment})
