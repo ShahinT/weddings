@@ -27,6 +27,9 @@ export interface Event {
   id: string;
   name: string;
   userId: string;
+  bride: string;
+  groom: string;
+  startTime: string;
 }
 
 export interface Companion {
