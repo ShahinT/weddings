@@ -88,6 +88,7 @@ export const setAdminEvents = createAsyncThunk("event/setAdminEvents", async (_,
       groom: event.data().groom,
       bride: event.data().bride,
       startTime: event.data().startTime,
+      address: event.data().address
     }
   ))
 })
@@ -127,7 +128,8 @@ export const setCurrentEvent = createAsyncThunk("event/setCurrentEvent", async (
     userId: currentEventSnap.data()?.userId,
     bride: currentEventSnap.data()?.bride,
     groom: currentEventSnap.data()?.groom,
-    startTime: currentEventSnap.data()?.startTime
+    startTime: currentEventSnap.data()?.startTime,
+    address: currentEventSnap.data()?.address
   }
 
   const currentCompanionSnap = await getDoc(doc(db, "companions", payload.companionId))

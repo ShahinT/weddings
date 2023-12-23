@@ -30,6 +30,7 @@ export interface Event {
   bride: string;
   groom: string;
   startTime: string;
+  address: string;
 }
 
 export interface Companion {

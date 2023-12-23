@@ -22,7 +22,10 @@ const AdminLandingPage = () => {
         {
           id: event.data().id,
           userId: event.data().userId,
-          name: event.data().name
+          name: event.data().name,
+          groom: event.data().groom,
+          bride: event.data().bride,
+          startTime: event.data().startTime,
         }
       ))
       setEvents(fetchedEvents);

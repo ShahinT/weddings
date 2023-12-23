@@ -3,10 +3,24 @@
 @tailwind utilities;
 body {
   /*background: rgba(248, 248, 248, 0.7);*/
+  color: #334155;
 }
 
 .active-nav svg{
   fill: #8b33d7;
+}
+
+.bounce {
+  animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
 }
 
 .palcemenet-wrapper{
@@ -70,7 +84,7 @@ body {
 }
 
 .shah-card-hover {
-  @apply block p-4 cursor-pointer md:p-5 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700;
+  @apply p-4 cursor-pointer md:p-5 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700;
 }
 
 .shah-card {

@@ -1,15 +1,15 @@
 import { useNavigate} from "react-router-dom";
-import {FC, useState} from "react";
+import {useState} from "react";
 import {Companion} from "../../../interfaces";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../store";
 import {declineCurrentGuests, submitinvitation} from "../../../store/event.ts";
 
-interface WelcomeCardProps {
+interface props {
   companion: Companion,
 }
 
-const WelcomeCard: FC<WelcomeCardProps> = ({companion}) => {
+const WelcomeCard = ({companion}: props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>()
   const guetsCount: number = useSelector((state: RootState) => state.event.currentGuests.length)
