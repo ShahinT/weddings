@@ -25,8 +25,8 @@ export interface User {
 
 export interface Event {
   id: string;
-  name: string;
   userId: string;
+  name: string;
   bride: string;
   groom: string;
   startTime: string;
@@ -38,4 +38,14 @@ export interface Companion {
   eventId: string;
   submitted: boolean;
   url: string
+}
+
+export interface AddEventPayload {
+  name: string;
+  bride: string;
+  groom: string;
+  startTime: string;
+  address: string;
+  email: string;
+  userId?: string
 }

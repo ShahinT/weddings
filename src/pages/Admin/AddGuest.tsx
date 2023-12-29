@@ -1,10 +1,11 @@
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../store";
-import {FormEvent, useState} from "react";
+import {FormEvent, useContext, useState} from "react";
 import {addGuest} from "../../store/event.ts";
-import {IconPlus, IconThreeDotsVertical} from "../../components/Icons.tsx";
+import {IconBurgerMenu, IconPlus, IconThreeDotsVertical} from "../../components/Icons.tsx";
 import {GuestCreationMaterial} from "../../interfaces";
 import {useParams} from "react-router-dom";
+import {DrawerContext} from "../../contexts/DrawerContext.ts";
 
 
 
@@ -42,13 +43,23 @@ const AddGuest = () => {
   const addNameFields = (): void => {
     setNameValues([...nameValues, {firstName: '', lastName: '', showDropDown: false}]);
   };
+  const { setIsDrawerOpen } = useContext(DrawerContext);
+  const kirHandler = (event: FormEvent): void => {
+    event.preventDefault();
+    setIsDrawerOpen(true)
+  }
   return (
     <>
       <form onSubmit={(event: FormEvent<HTMLFormElement>) => submitHandler(event)}>
         <div className="p-4">
           <div className="flex justify-between">
-            <div className={'font-semibold text-xl'}>
-              Create companions
+            <div className="flex font-semibold text-xl">
+              <button className="btn-icon-primary mr-2" onClick={(event: FormEvent) => kirHandler(event)}>
+                <IconBurgerMenu size="4"/>
+              </button>
+              <div>
+                Create companions
+              </div>
             </div>
             <div>
               <button type="submit" className={'btn-primary-small'}>Submit</button>

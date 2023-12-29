@@ -2,8 +2,9 @@ import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {Companion, Guest} from "../../interfaces";
-import {IconComment, IconPeople, IconSearch} from "../../components/Icons.tsx";
-import {ChangeEvent, useMemo, useState} from "react";
+import {IconAddGuest, IconBurgerMenu, IconComment, IconPeople, IconSearch} from "../../components/Icons.tsx";
+import {ChangeEvent, useContext, useMemo, useState} from "react";
+import {DrawerContext} from "../../contexts/DrawerContext.ts";
 
 export interface Counters {total: number, accepted: number, declined: number, pending: number}
 export type CounterKey = keyof Counters;
@@ -23,7 +24,6 @@ export interface NestedEvent {
   name: string,
   userId: string
 }
-
 const GuestsListAdmin = () => {
   const navigate = useNavigate();
   const [showCompanionModal, setShowCompanionModal] = useState<boolean>(false);
@@ -73,14 +73,22 @@ const GuestsListAdmin = () => {
     return acc;
   }, { total: 0, accepted: 0, declined: 0, pending: 0 })
 
+  const { setIsDrawerOpen } = useContext(DrawerContext);
+  // const toggleSideDrawerHandler = (): void => {
+  //   setIsDrawerOpen(true);
+  // }
+
   return (
     <>
       <div className="p-4 mb-2 flex justify-between items-center">
         <div className={'flex font-semibold text-xl'}>
+          <button className="btn-icon-primary mr-2" onClick={() => setIsDrawerOpen(true)}>
+            <IconBurgerMenu size="4"/>
+          </button>
           <div>Guests list</div>
         </div>
         <div>
-          <button onClick={() => navigate("../add-guest")} className="btn-primary-small">Add guest</button>
+          <button onClick={() => navigate("../add-guest")} className="btn-icon"><IconAddGuest size={'6'} color='action'/></button>
         </div>
       </div>
       <div className="flex bg-white text-center border border-gray-200">

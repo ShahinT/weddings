@@ -24,15 +24,12 @@ const Login = () => {
 
   return(
     <div>
-      <h1>
-        <section>
-          <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-            <div
-              className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                  Sign in to your account
-                </h1>
+          <div className="flex flex-col items-center justify-center mx-auto h-screen lg:py-0">
+            <div className="w-full bg-white rounded-lg  dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+              <div className="pb-6 pr-6 pl-6 space-y-4 md:space-y-6 sm:p-8">
+                <div className="flex justify-center mb-6">
+                  <img src="https://i.pinimg.com/736x/11/94/b9/1194b96640d448cb4f0e6aaa68e998dc.jpg" className="w-16" alt=""/>
+                </div>
                 <form className="space-y-4 md:space-y-6" onSubmit={(e) => signinHandler(e)}>
                   <div>
                     <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
@@ -68,7 +65,7 @@ const Login = () => {
                     <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot
                       password?</a>
                   </div>
-                  <button type="submit" className={'btn-primary w-full text-center'}>
+                  <button type="submit" className={'bg-violet-600 rounded py-1 text-white w-full text-center'}>
                     Sign in
                   </button>
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400">
@@ -79,8 +76,6 @@ const Login = () => {
               </div>
             </div>
           </div>
-        </section>
-      </h1>
     </div>
   )
 }

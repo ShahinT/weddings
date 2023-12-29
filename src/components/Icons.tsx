@@ -1,3 +1,8 @@
+interface SizePayload{
+  size: string,
+  color? : string
+}
+
 export const IconCircle = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-circle"
@@ -114,7 +119,7 @@ export const IconPlus = () => {
 export const IconSpinner = () => {
   return (
     <div role="status">
-      <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+      <svg aria-hidden="true" className="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
@@ -147,6 +152,15 @@ export const IconGeo = ({size, color}: SizePayload) => {
     </svg>
   )
 }
+export const IconBurgerMenu = ({size, color}: SizePayload) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill={color ? color : defaultColor} className={`w-${size} h-${size} bi bi-list`}
+         viewBox="0 0 16 16">
+      <path fillRule="evenodd"
+            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+    </svg>
+  )
+}
 export const IconCalendar = ({size, color}: SizePayload) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill={color ? color : defaultColor} className={`w-${size} h-${size} bi bi-calendar`}
@@ -166,11 +180,10 @@ export const IconList = () => {
     </svg>
   )
 }
-export interface SizePayload{
-  size: string,
-  color? : string
-}
 const defaultColor: string = '#334155';
+const allColors = {
+  action: '#7c3aed'
+};
 export const IconPeople = ({size, color}: SizePayload) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill={color} className={`w-${size} h-${size} bi bi-people-fill`}
@@ -190,10 +203,10 @@ export const IconHouse = () => {
     </svg>
   )
 }
-export const IconAddGuest = () => {
+export const IconAddGuest = ({size, color}: SizePayload) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg"
-         className="w-6 h-6 bi bi-plus-circle-fill" viewBox="0 0 16 16">
+    //@ts-expect-error i know lol
+    <svg xmlns="http://www.w3.org/2000/svg" fill={allColors[color]} className={`w-${size} h-${size} bi bi-plus-circle-fill`} viewBox="0 0 16 16">
       <path
         d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
     </svg>

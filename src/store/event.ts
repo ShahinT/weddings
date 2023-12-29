@@ -9,7 +9,7 @@ import {
   DocumentReference, query, where
 } from "firebase/firestore";
 import {db} from "../plugins/firebase.ts";
-import {Companion, Guest, Event, GuestCreationMaterial} from "../interfaces";
+import {Companion, Guest, Event, GuestCreationMaterial, AddEventPayload, User} from "../interfaces";
 import {RootState} from "./index.ts";
 
 export interface EventState {
@@ -35,10 +35,6 @@ const initialState: EventState = {
 export interface EventCompanionIdPayload {
   eventId: string,
   companionId: string
-}
-
-export interface StatusPayload {
-  status: string
 }
 
 export const setCurrentAdminEvent = createAsyncThunk("event/setCurrentAdminEvent", async (payload: { eventId: string | undefined }) => {
@@ -71,13 +67,25 @@ export const setCurrentAdminEvent = createAsyncThunk("event/setCurrentAdminEvent
       guests: guests.filter(guest => guest.companionId === companion.id)
     }))
   };
-  // console.log(event);
   return {event, guests, companions}
 })
 
+export const addEvent = createAsyncThunk("event/addEvent", async (payload: AddEventPayload) => {
+  const userIdQuery = query(collection(db, "users"), where("email","==",payload.email));
+  const userId = await getDocs(userIdQuery)
+  console.log(userId.docs[0].data().id)
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const {email, ...newPayload} = payload;
+
+  newPayload.userId = userId.docs[0].data().id;
+  const eventRef =  await addDoc(collection(db, "events"), {...newPayload, });
+  await updateDoc(eventRef, {id: eventRef.id});
+})
+
 export const setAdminEvents = createAsyncThunk("event/setAdminEvents", async (_, {getState}) => {
-  const rootState = getState() as RootState;
-  const currentUser = rootState.authentication.currentUser;
+  const rootState: RootState = getState() as RootState;
+  const currentUser: User | null = rootState.authentication.currentUser;
   const eventsQuery = query(collection(db, "events"), where("userId", "==", currentUser?.uid));
   const eventsSnapshot = await getDocs(eventsQuery);
   return eventsSnapshot.docs.map((event) => (

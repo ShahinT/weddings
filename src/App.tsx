@@ -13,6 +13,7 @@ import GuestsListAdmin from "./pages/Admin/GuestsListAdmin.tsx";
 import AddGuest from "./pages/Admin/AddGuest.tsx";
 import GuestPlacement from "./pages/Admin/GuestsPlacement.tsx";
 import AdminLandingPage from "./pages/Admin/AdminLandingPage.tsx";
+import SuperAdmin from "./pages/SuperAdmin.tsx";
 
 declare global {
   interface Window {
@@ -61,7 +62,11 @@ function App() {
         { path: 'guests-list', element: <GuestsListAdmin />},
         { path: 'guests-placement', element: <GuestPlacement />},
       ]
-    }
+    },
+    {
+      path: '/super-admin',
+      element: <RouteGuard isProtected={true} element={<SuperAdmin />} />
+    },
   ])
   return (
     <>
