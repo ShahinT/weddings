@@ -16,7 +16,7 @@ const AdminLandingPage = () => {
     const fetchevents = async (): Promise<void> => {
       await dispatch(setAdminEvents());
     };
-    fetchevents();
+    fetchevents().catch(err => console.error(err));
   }, [dispatch]);
 
   const logoutHandler = async (): Promise<void> => {
@@ -25,8 +25,8 @@ const AdminLandingPage = () => {
   }
 
   return (
-    <div>
-      <div className="p-4">
+    <div className="max-w-4xl mx-auto">
+      <div className="p-4 md:mb-10">
         <div className="flex justify-between">
           <div className={'font-semibold text-xl'}>
             Your events
@@ -35,8 +35,8 @@ const AdminLandingPage = () => {
         </div>
       </div>
       <div className="p-2">
-        {events.length > 0 && events.map((event) => (
-          <div className={'shah-card-hover mb-2'} key={event.id} onClick={() => navigate(`/admin/${event.id}/guests-list`)}>
+        {events.length > 0 && events.map((event: Event) => (
+          <div data-testid="event-item" className={'shah-card-hover mb-2'} key={event.id} onClick={() => navigate(`/admin/${event.id}/guests-list`)}>
             <div className="flex justify-between items-center">
               <div key={event.id}>
                 {event.name}

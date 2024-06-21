@@ -36,7 +36,7 @@ export interface EventCompanionIdPayload {
   eventId: string,
   companionId: string
 }
-
+collection
 export const setCurrentAdminEvent = createAsyncThunk("event/setCurrentAdminEvent", async (payload: { eventId: string | undefined }) => {
   const companionsQuery = query(collection(db, "companions"), where("eventId", "==", payload.eventId));
   const companionsSnap = await getDocs(companionsQuery)
@@ -71,9 +71,9 @@ export const setCurrentAdminEvent = createAsyncThunk("event/setCurrentAdminEvent
 })
 
 export const addEvent = createAsyncThunk("event/addEvent", async (payload: AddEventPayload) => {
+  console.log(payload)
   const userIdQuery = query(collection(db, "users"), where("email","==",payload.email));
   const userId = await getDocs(userIdQuery)
-  console.log(userId.docs[0].data().id)
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {email, ...newPayload} = payload;
@@ -184,26 +184,26 @@ export const updateGuest = createAsyncThunk('event/updateGuest', async (payload:
 
 })
 
-export interface Kir {
+export interface addGuestPayload {
   nameValues: GuestCreationMaterial[],
   eventId: string | undefined
 }
 
-export const addGuest = createAsyncThunk('event/addGuest', async (kir: Kir): Promise<void> => {
+export const addGuest = createAsyncThunk('event/addGuest', async (payload: addGuestPayload): Promise<void> => {
   const companionRef: DocumentReference = await addDoc(collection(db, "companions"), {
     submitted: false,
-    eventId: kir.eventId
+    eventId: payload.eventId
   })
   await updateDoc(companionRef, {
-    url: `http://localhost:5173/event/${kir.eventId}/${companionRef.id}`,
+    url: `https://eventmanager-shahin.web.app/event/${payload.eventId}/${companionRef.id}`,
     id: companionRef.id
   })
-  for (const guest of kir.nameValues) {
+  for (const guest of payload.nameValues) {
     const guestRef: DocumentReference = await addDoc(collection(db, "guests"), {
       firstName: guest.firstName,
       lastName: guest.lastName,
       status: 'pending',
-      eventId: kir.eventId,
+      eventId: payload.eventId,
       companionId: companionRef.id
     });
     await updateDoc(guestRef, {

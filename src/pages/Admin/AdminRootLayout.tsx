@@ -29,7 +29,9 @@ const AdminRootLayout = () => {
         <>
           <DrawerProvider>
             <SideDrawer />
-            <Outlet />
+            <div className={'max-w-4xl mx-auto'}>
+              <Outlet />
+            </div>
             <BottomNavigationAdmin/>
           </DrawerProvider>
         </>

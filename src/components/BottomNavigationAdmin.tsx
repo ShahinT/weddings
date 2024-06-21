@@ -7,7 +7,6 @@ interface NavButton {
   icon: ReactNode,
   to: string
 }
-// {id: 1, icon: <IconHouse />, to: `/${eventId}/admin`},
 
 const BottomNavigationAdmin = () => {
   const location = useLocation();

@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {Companion, Guest} from "../../interfaces";
+import {Guest} from "../../interfaces";
 import {IconAddGuest, IconBurgerMenu, IconComment, IconPeople, IconSearch} from "../../components/Icons.tsx";
 import {ChangeEvent, useContext, useMemo, useState} from "react";
 import {DrawerContext} from "../../contexts/DrawerContext.ts";
@@ -10,7 +10,7 @@ export interface Counters {total: number, accepted: number, declined: number, pe
 export type CounterKey = keyof Counters;
 export type Status = 'accepted' | 'declined' | 'pending';
 export interface StatusBox {id: string, title: CounterKey}
-
+import QRCode from "react-qr-code";
 export interface NestedCompanion {
   guests: Guest[],
   id: string,
@@ -30,7 +30,7 @@ const GuestsListAdmin = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const guests: Guest[] = useSelector((state: RootState) => state.event.currentAdminGuests);
   const event: NestedEvent = useSelector((state: RootState) => state.event.currentAdminEvent as NestedEvent);
-  const [selectedCompanion, setSelectedCompanion] = useState<Companion | null>(null);
+  const [selectedCompanion, setSelectedCompanion] = useState<NestedCompanion | null>(null);
 
   const filteredCompanions: NestedCompanion[] = useMemo(() => {
     const lowerCasedSearchValue: string = searchValue.toLowerCase();
@@ -42,21 +42,10 @@ const GuestsListAdmin = () => {
     return event.companions.filter(doesGuestMatchSearch)
   }, [event, searchValue]);
 
-  const selectCompanionHandler = (companion: Companion): void => {
+  const selectCompanionHandler = (companion: NestedCompanion): void => {
     setSelectedCompanion(companion);
     setShowCompanionModal(true)
   }
-
-  // const filteredGuests = useMemo<Guest[]>(()=> {
-  //   const lowerCasedSearchValue: string = searchValue.toLowerCase();
-  //   const doesGuestMatchSearch = (guest: Guest) =>
-  //     (guest.firstName.toLowerCase().includes(lowerCasedSearchValue) ||
-  //     (guest.lastName.toLowerCase().includes(lowerCasedSearchValue)));
-  //
-  //   return guests.filter(doesGuestMatchSearch)
-  // }, [guests, searchValue])
-
-  // const sortedAndFilteredGuests: Guest[] = filteredGuests.sort((a: Guest,b: Guest) => a.companionId.localeCompare(b.companionId));
 
   const statusBoxes: StatusBox[] = [
     {id: '1', title: 'total'},
@@ -74,9 +63,6 @@ const GuestsListAdmin = () => {
   }, { total: 0, accepted: 0, declined: 0, pending: 0 })
 
   const { setIsDrawerOpen } = useContext(DrawerContext);
-  // const toggleSideDrawerHandler = (): void => {
-  //   setIsDrawerOpen(true);
-  // }
 
   return (
     <>
@@ -92,14 +78,14 @@ const GuestsListAdmin = () => {
         </div>
       </div>
       <div className="flex bg-white text-center border border-gray-200">
-      {statusBoxes.map((box: StatusBox) => (
-        <div key={box.id} className="w-1/4 py-2 items-center justify-center border-r border-gray-200">
-          <div className="text-xs capitalize text-gray-500">{box.title}</div>
-          <div className={'text-xl'}>{counters[box.title]}</div>
-        </div>
-      ))}
+        {statusBoxes.map((box: StatusBox) => (
+          <div key={box.id} className="w-1/4 py-2 items-center justify-center border-r border-gray-200">
+            <div className="text-xs capitalize text-gray-500">{box.title}</div>
+            <div className={'text-xl'}>{counters[box.title]}</div>
+          </div>
+        ))}
       </div>
-      <div>
+      <div className="md:mt-6 md:mb-2">
         <label htmlFor="default-search"
                className="my-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
         <div className="relative">
@@ -115,12 +101,12 @@ const GuestsListAdmin = () => {
       </div>
       <div>
 
-        <div className="p-2">
+        <div className="p-2 md:p-0">
           {filteredCompanions && filteredCompanions.map((companion: NestedCompanion) => (
             <div className="flex  mb-2  bg-white" key={companion.id}>
               <div className="w-11/12 border rounded-l-lg border-gray-200">
                 {companion.guests.map((guest: Guest, index: number) => (
-                  <div key={guest.id}>
+                  <div key={guest.id} >
                     <div className={'p-4'}>
                       <div className={guest.status === 'pending' ? 'text-gray-400': guest.status === 'accepted' ? 'text-green-600' : 'text-red-600'}>
                         {guest.firstName} {guest.lastName}
@@ -142,28 +128,24 @@ const GuestsListAdmin = () => {
           ))}
         </div>
 
-        {/*<div className="p-2">*/}
-        {/*  {sortedAndFilteredGuests && sortedAndFilteredGuests.map((guest: Guest, index: number) => (*/}
-        {/*    <div className={`p-4 bg-indigo-10 border-r border-l border-t border-gray-200 justify-between items-center ${sortedAndFilteredGuests[index+1]?.companionId === guest.companionId ? "" : "mb-4 border-b border-gray-200" }`} key={guest.id}>*/}
-        {/*      <div>*/}
-        {/*        <div className={guest.status === 'pending' ? 'text-gray-400': guest.status === 'accepted' ? 'text-green-600' : 'text-red-600'}>*/}
-        {/*          {guest.firstName} {guest.lastName}*/}
-        {/*        </div>*/}
-        {/*        {guest.comment && (*/}
-        {/*          <div className="flex items-center text-sm">*/}
-        {/*            <IconComment /> <span className="ml-2 text-gray-500">{guest.comment}</span>*/}
-        {/*          </div>*/}
-        {/*        )}*/}
-        {/*      </div>*/}
-        {/*    </div>*/}
-        {/*  ))}*/}
-        {/*</div>*/}
       </div>
       {selectedCompanion && showCompanionModal &&
         <div id="modal" className="fixed z-40 inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 w-10/12 rounded">
+          <div className="bg-white p-6 w-10/12 rounded max-w-2xl md:py-16">
+
             <div className="flex justify-center">
-              <img src="https://miro.medium.com/v2/resize:fit:990/1*FX_LPYdLaX1IPlohROEaQA.jpeg" alt="qr-code" className="w-44" />
+              {selectedCompanion.guests.map(guest => (
+                <div key={guest.id} className="text-center mb-8 font-bold mx-4">{guest.firstName}</div>
+              ))}
+            </div>
+            <div className="flex justify-center p-4">
+              {/*<img src="https://miro.medium.com/v2/resize:fit:990/1*FX_LPYdLaX1IPlohROEaQA.jpeg" alt="qr-code" className="w-44" />*/}
+                <QRCode
+                  size={256}
+                  className="w-56"
+                  value={selectedCompanion.url}
+                  viewBox={`0 0 256 256`}
+                />
             </div>
             <div className="flex justify-center mt-7">
               <button className="btn-cancel mx-2" onClick={() => setShowCompanionModal(false)}>Avbryt</button>

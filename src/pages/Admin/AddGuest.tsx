@@ -44,7 +44,7 @@ const AddGuest = () => {
     setNameValues([...nameValues, {firstName: '', lastName: '', showDropDown: false}]);
   };
   const { setIsDrawerOpen } = useContext(DrawerContext);
-  const kirHandler = (event: FormEvent): void => {
+  const openDrawerHandler = (event: FormEvent): void => {
     event.preventDefault();
     setIsDrawerOpen(true)
   }
@@ -54,7 +54,7 @@ const AddGuest = () => {
         <div className="p-4">
           <div className="flex justify-between">
             <div className="flex font-semibold text-xl">
-              <button className="btn-icon-primary mr-2" onClick={(event: FormEvent) => kirHandler(event)}>
+              <button className="btn-icon-primary mr-2" onClick={(event: FormEvent) => openDrawerHandler(event)}>
                 <IconBurgerMenu size="4"/>
               </button>
               <div>
@@ -66,9 +66,9 @@ const AddGuest = () => {
             </div>
           </div>
         </div>
-        <div className={'p-2'}>
+        <div className={'p-2 mt-5'}>
           {nameValues.map((value, index) => (
-            <div key={index} className={'shah-card mb-2'}>
+            <div key={index} className={'mb-5'}>
               <div className={'mb-2 px-1 flex justify-between items-center'}>
                 <div className="flex items-center">
 
@@ -122,8 +122,8 @@ const AddGuest = () => {
               </div>
             </div>
           ))}
-          <div className={'text-center flex justify-center'}>
-            <button className={'btn-link flex items-center '} type="button" onClick={addNameFields}>
+          <div className={'text-center flex justify-center mt-8 md:mt-10'}>
+            <button className={'btn-link flex items-center'} type="button" onClick={addNameFields}>
               <div>
                 Add Guest
               </div>
@@ -132,9 +132,6 @@ const AddGuest = () => {
               </div>
             </button>
           </div>
-          {/*<div className={'mt-6'}>*/}
-          {/*  <button className={'btn-primary-small w-full'}>Skicka in</button>*/}
-          {/*</div>*/}
         </div>
       </form>
     </>

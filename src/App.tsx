@@ -27,7 +27,6 @@ window.loggg = (value: any) : void => {
 };
 function App() {
 
-  // <ProtectedRoute isAuthenticated={isAuthenticated} component={AppRootLayout} />
   const router = createBrowserRouter([
     {
       path: '/',
@@ -66,7 +65,7 @@ function App() {
     {
       path: '/super-admin',
       element: <RouteGuard isProtected={true} element={<SuperAdmin />} />
-    },
+    }
   ])
   return (
     <>

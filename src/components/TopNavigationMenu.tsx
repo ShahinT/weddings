@@ -3,6 +3,7 @@ import {IconArrowLeft} from "./Icons.tsx";
 import {FC, ReactNode} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../store";
+import {Event} from "../interfaces"
 interface TopNavigationMenu {
   showBackButton: boolean;
   title?: string,
@@ -11,7 +12,7 @@ interface TopNavigationMenu {
   // element: ReactNode;
 const TopNavigationMenu: FC<TopNavigationMenu> = ({showBackButton, title, children}) => {
   const navigate = useNavigate();
-  const currentEvent = useSelector((state: RootState) => state.event.currentEvent);
+  const currentEvent: Event | null = useSelector((state: RootState) => state.event.currentEvent);
   const goBackHandler = () => {
     navigate(-1);
   }

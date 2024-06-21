@@ -1,7 +1,4 @@
-import { useRouteError } from 'react-router-dom';
-
 function ErrorPage() {
-  const error = useRouteError();
 
   return (
     <>
@@ -20,9 +17,6 @@ function ErrorPage() {
             <a href="#" className="text-sm font-semibold text-gray-900">
               Contact support <span aria-hidden="true">&rarr;</span>
             </a>
-            <div>
-              {error && error.data && error.message && error.data.message}
-            </div>
           </div>
         </div>
       </main>

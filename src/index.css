@@ -91,7 +91,7 @@ body {
 }
 
 .search-input{
-  @apply block w-full p-4 ps-10 text-sm text-gray-900 border-b outline-none border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white ;
+  @apply block w-full md:w-60 p-4 ps-10 text-sm text-gray-900 border-b md:border md:rounded-2xl outline-none border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white ;
 }
 
 .image-container {
@@ -106,4 +106,9 @@ body {
   display: block; /* Removes any extra space below the image */
   border-top-left-radius: 0.5rem; /* Apply rounded corners to the top-left */
   border-top-right-radius: 0.5rem; /* Apply rounded corners to the top-right */
+}
+
+.login-wrapper{
+  background-image: url("./assets/artboard-2.png");
+  background-size: cover;
 }

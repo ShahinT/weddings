@@ -22,7 +22,7 @@ const CountDown = ({currentEvent}: props) => {
     seconds: 0
   });
   const targetTime: number = new Date(currentEvent!.startTime).getTime();
-  const interval: number = window.setInterval(() => {
+  const interval: number = window.setInterval((): void => {
     const now: number = new Date().getTime();
     const distance: number = targetTime - now;
     if (distance < 0) {
@@ -42,12 +42,9 @@ const CountDown = ({currentEvent}: props) => {
   return (
     <div className="shah-card">
       <div className="text-center text-xl">
-        {/*{currentEvent?.name}*/}
         Event starts at
       </div>
       <div className="mt-4">
-        {/*<input onChange={(event) => setDateValue(event.target.value)} value={dateValue} className={'input-primaty'} type="datetime-local"/>*/}
-        {/*<button className="btn-primary mt-2" onClick={() => startTimer()}>SET</button>*/}
       </div>
       { !eventIsOver &&
         <div className="flex text-center mx-auto">
@@ -63,4 +60,3 @@ const CountDown = ({currentEvent}: props) => {
   )
 }
 export  default CountDown;
-{/*<input className={'input-primaty'} type="datetime-local"/>*/}

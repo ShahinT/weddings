@@ -7,7 +7,6 @@ const AppRootLayout = () => {
       <main>
         <Outlet />
       </main>
-      {/*<div>Footer</div>*/}
     </>
   )
 }

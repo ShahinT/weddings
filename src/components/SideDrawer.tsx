@@ -7,7 +7,6 @@ import {DrawerContext} from "../contexts/DrawerContext.ts";
 import {IconChevronRight} from "./Icons.tsx";
 
 const SideDrawer = () => {
-  // const [showSideBarDrawer, setShowSideBarDrawer] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const logoutHandler = async (): Promise<void> => {
@@ -16,9 +15,6 @@ const SideDrawer = () => {
   };
   const {isDrawerOpen, setIsDrawerOpen} = useContext(DrawerContext)
 
-  // const handleEventFromChild = (): void => {
-  //   setShowSideBarDrawer(!showSideBarDrawer)
-  // }
   return (
     <>
       { isDrawerOpen && (
